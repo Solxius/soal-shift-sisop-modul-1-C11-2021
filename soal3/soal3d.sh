@@ -1,3 +1,3 @@
 #!/bin/bash
 
-zip --password $(date '+%d%m%Y') -rm Koleksi.zip */
+zip --password $(date '+%m%d%Y') -rm Koleksi.zip */
