@@ -1,2 +1,2 @@
 0 7 * * 1-5 bash /home/solxius/Desktop/Sisop/Modul1/soal3d.sh
-0 18 * * 1-5 unzip -P $(date '+%d%m%Y') /home/solxius/Desktop/Sisop/Modul1/Koleksi.zip && rm /home/solxius/Desktop/Sisop/Modul1/Koleksi.zip
+0 18 * * 1-5 unzip -P $(date '+%m%d%Y') /home/solxius/Desktop/Sisop/Modul1/Koleksi.zip && rm /home/solxius/Desktop/Sisop/Modul1/Koleksi.zip
