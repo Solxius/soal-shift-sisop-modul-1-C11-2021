@@ -154,4 +154,231 @@ echo "Username,INFO,ERROR" > $user_output
 echo "$user_output_sorted" >> $user_output
 ```
 
+## Soal Nomor 3
+Kuuhaku adalah orang yang sangat suka mengoleksi foto-foto digital, namun Kuuhaku juga merupakan seorang yang pemalas sehingga ia tidak ingin repot-repot mencari foto, selain itu ia juga seorang pemalu, sehingga ia tidak ingin ada orang yang melihat koleksinya tersebut, sayangnya ia memiliki teman bernama Steven yang memiliki rasa kepo yang luar biasa. Kuuhaku pun memiliki ide agar Steven tidak bisa melihat koleksinya, serta untuk mempermudah hidupnya, yaitu dengan meminta bantuan kalian. Idenya adalah :
 
+**(a)** Membuat script untuk mengunduh 23 gambar dari "https://loremflickr.com/320/240/kitten" serta menyimpan log-nya ke file "Foto.log". Karena gambar yang diunduh acak, ada kemungkinan gambar yang sama terunduh lebih dari sekali, oleh karena itu kalian harus menghapus gambar yang sama (tidak perlu mengunduh gambar lagi untuk menggantinya). Kemudian menyimpan gambar-gambar tersebut dengan nama "Koleksi_XX" dengan nomor yang berurutan tanpa ada nomor yang hilang (contoh : Koleksi_01, Koleksi_02, ...)
+
+**(b)** Karena Kuuhaku malas untuk menjalankan script tersebut secara manual, ia juga meminta kalian untuk menjalankan script tersebut sehari sekali pada jam 8 malam untuk tanggal-tanggal tertentu setiap bulan, yaitu dari tanggal 1 tujuh hari sekali (1,8,...), serta dari tanggal 2 empat hari sekali(2,6,...). Supaya lebih rapi, gambar yang telah diunduh beserta log-nya, dipindahkan ke folder dengan nama tanggal unduhnya dengan format "DD-MM-YYYY" (contoh : "13-03-2023").
+
+**(c)** Agar kuuhaku tidak bosan dengan gambar anak kucing, ia juga memintamu untuk mengunduh gambar kelinci dari "https://loremflickr.com/320/240/bunny". Kuuhaku memintamu mengunduh gambar kucing dan kelinci secara bergantian (yang pertama bebas. contoh : tanggal 30 kucing > tanggal 31 kelinci > tanggal 1 kucing > ... ). Untuk membedakan folder yang berisi gambar kucing dan gambar kelinci, nama folder diberi awalan "Kucing_" atau "Kelinci_" (contoh : "Kucing_13-03-2023").
+
+**(d)** Untuk mengamankan koleksi Foto dari Steven, Kuuhaku memintamu untuk membuat script yang akan memindahkan seluruh folder ke zip yang diberi nama “Koleksi.zip” dan mengunci zip tersebut dengan password berupa tanggal saat ini dengan format "MMDDYYYY" (contoh : “03032003”).
+
+**(e)** Karena kuuhaku hanya bertemu Steven pada saat kuliah saja, yaitu setiap hari kecuali sabtu dan minggu, dari jam 7 pagi sampai 6 sore, ia memintamu untuk membuat koleksinya ter-zip saat kuliah saja, selain dari waktu yang disebutkan, ia ingin koleksinya ter-unzip dan tidak ada file zip sama sekali.
+
+## Jawaban Nomor 3
+
+**(a)** 
+```bash
+#!/bin/bash
+
+for ((a=0; a<23; a=a+1))
+do
+	wget -a /home/solxius/Desktop/Sisop/Modul1/Foto.log "https://loremflickr.com/320/240/kitten" -O /home/solxius/Desktop/Sisop/Modul1/kitten"$a".jpeg
+done
+
+awk '/Location/ {print $2}' Foto.log >> check.log
+
+readarray myarray < check.log
+indexo=0
+
+for ((a=0; a<23; a=a+1))
+do
+flag=0
+	for ((b=a-1; b>=0; b=b-1))
+	do
+		if [ ${myarray[a]} == ${myarray[b]} ]
+		then
+		  flag=1
+		  break
+		else
+		  flag=0
+		fi
+	done
+
+	if [ $flag -eq 0 ]
+	then
+		indexo=$(($indexo + 1)) 
+		zerotwodee=$(printf "Koleksi_%02d" "$indexo")
+		mv /home/solxius/Desktop/Sisop/Modul1/kitten"$a".jpeg /home/solxius/Desktop/Sisop/Modul1/$zerotwodee.jpeg
+	else
+		rm /home/solxius/Desktop/Sisop/Modul1/kitten"$a".jpeg
+	fi
+done
+
+rm check.log
+```
+
+Pertama, kita mendownload 23 gambar kucing dari website yang diberi. Kita menggunakan 'wget -a /home/solxius/Desktop/Sisop/Modul1/Foto.log' untuk men-append log kepada Foto.log. Kita menggunakan '-O /home/solxius/Desktop/Sisop/Modul1/kitten"$a".jpeg' supaya gambar yang didownload memiliki nama "kitten(angka-sekarang).jpeg" supaya mudah diorganisir.
+
+```bash
+wget -a /home/solxius/Desktop/Sisop/Modul1/Foto.log "https://loremflickr.com/320/240/kitten" -O /home/solxius/Desktop/Sisop/Modul1/kitten"$a".jpeg
+```
+
+Selanjutnya, kita mengerti bahwa di dalam log terdapat lokasi gambar di dalam website, sehingga kita dapat menggunakan itu untuk mengidentifikasi gambar yang duplikat. Jadi, kita menggunakan "awk '/Location/ {print $2}' Foto.log >> check.log" untuk mencari lokasi link dari setiap gambar dan menaruhkannya di check.log. Lalu, kita membuat check.log menjadi array, supaya bisa dengan mudah dicek oleh program. Gambar indeks ke-0 memiliki lokasi di array indeks ke-0, dan selanjutnya.
+
+```bash
+awk '/Location/ {print $2}' Foto.log >> check.log
+
+readarray myarray < check.log
+indexo=0
+```
+
+Lalu, kita looping, dan untuk setiap gambar, kita mengecek linknya dengan segala link gambar di sebelumnya. Contohnya, gambar indeks ke-2 akan dicek dengan gambar ke-1 dan ke-0. Jika ada yang memiliki link lokasi yang sama, dikasih flag 1. Jika flag 1, dihapus.
+
+Jika flag-nya 0, jadi gambar tersebut tidak duplikat kepada gambar apapun di sebelumnya, jadi kita mengganti namanya dengan indeks yang benar. Variabel indexo untuk namanya, supaya kita mengetahui sementara gambar nomor berapa. Lalu, setelah semua selesai, tinggal menghapus check.log.
+
+```bash
+indexo=$(($indexo + 1)) 
+zerotwodee=$(printf "Koleksi_%02d" "$indexo")
+mv /home/solxius/Desktop/Sisop/Modul1/kitten"$a".jpeg /home/solxius/Desktop/Sisop/Modul1/$zerotwodee.jpeg
+```
+
+**(b)** 
+```bash
+#!/bin/bash
+
+mkdir /home/solxius/Desktop/Sisop/Modul1/$(date '+%d-%m-%Y')
+
+for ((a=0; a<23; a=a+1))
+do
+	wget -a /home/solxius/Desktop/Sisop/Modul1/Foto.log "https://loremflickr.com/320/240/kitten" -O /home/solxius/Desktop/Sisop/Modul1/kitten"$a".jpeg
+done
+
+awk '/Location/ {print $2}' Foto.log >> check.log
+
+readarray myarray < check.log
+indexo=0
+
+for ((a=0; a<23; a=a+1))
+do
+flag=0
+	for ((b=a-1; b>=0; b=b-1))
+	do
+		if [ ${myarray[a]} == ${myarray[b]} ]
+		then
+		  flag=1
+		  break
+		else
+		  flag=0
+		fi
+	done
+
+	if [ $flag -eq 0 ]
+	then
+		indexo=$(($indexo + 1)) 
+		zerotwodee=$(printf "Koleksi_%02d" "$indexo")
+		mv /home/solxius/Desktop/Sisop/Modul1/kitten"$a".jpeg /home/solxius/Desktop/Sisop/Modul1/$(date '+%d-%m-%Y')/$zerotwodee.jpeg
+	else
+		rm /home/solxius/Desktop/Sisop/Modul1/kitten"$a".jpeg
+	fi
+done
+
+mv /home/solxius/Desktop/Sisop/Modul1/Foto.log /home/solxius/Desktop/Sisop/Modul1/$(date '+%d-%m-%Y')/Foto.log
+
+rm check.log
+```
+
+Soal 3b hampir sama persis dengan 3a. Perbedaannya hanya saat pemindahan file. Jika flag sama dengan 0, dipindah ke folder '$(date '+%d-%m-%Y')', yaitu tanggal sekarang. 
+```bash
+mv /home/solxius/Desktop/Sisop/Modul1/kitten"$a".jpeg /home/solxius/Desktop/Sisop/Modul1/$(date '+%d-%m-%Y')/$zerotwodee.jpeg
+```
+
+Foto.log juga dipindah ke folder tersebut.
+
+```bash
+0 20 1,8,15,22,29,2,6,10,14,18,26,30 * * bash soal3b.sh
+```
+
+Arti dari crontab di atas adalah bahwa pada setiap tanggal di atas (yaitu setiap 7 hari dari tanggal 1, dan setiap 4 hari dari tanggal 2), pada jam 20:00, akan dijalankan program soal3b.sh.
+
+**(c)** 
+
+```bash
+#!/bin/bash
+
+direcname="Kucing_$(date '+%d-%m-%Y')"
+creaturename="kitten"
+lastname="Kucing_"
+
+if [ $(($(date '+%d')%2)) -eq 0  ]
+then
+	mkdir $direcname
+	for ((a=0; a<23; a=a+1))
+	do
+		wget -a /home/solxius/Desktop/Sisop/Modul1/Foto.log "https://loremflickr.com/320/240/kitten" -O /home/solxius/Desktop/Sisop/Modul1/$direcname/$creaturename$a.jpeg
+	done
+else
+	direcname="Kelinci_$(date '+%d-%m-%Y')"
+	creaturename="bunny"
+	lastname="Kelinci_"
+	mkdir $direcname
+	for ((a=0; a<23; a=a+1))
+	do
+		wget -a /home/solxius/Desktop/Sisop/Modul1/Foto.log "https://loremflickr.com/320/240/bunny" -O /home/solxius/Desktop/Sisop/Modul1/$direcname/$creaturename$a.jpeg
+	done
+fi
+
+awk '/Location/ {print $2}' Foto.log >> check.log
+
+readarray myarray < check.log
+indexo=0
+
+for ((a=0; a<23; a=a+1))
+do
+flag=0
+	for ((b=a-1; b>=0; b=b-1))
+	do
+		if [ ${myarray[a]} == ${myarray[b]} ]
+		then
+		  flag=1
+		  break
+		else
+		  flag=0
+		fi
+	done
+
+	if [ $flag -eq 0 ]
+	then
+		indexo=$(($indexo + 1)) 
+		zerotwodee=$(printf "Koleksi_%02d" "$indexo")
+		mv /home/solxius/Desktop/Sisop/Modul1/$direcname/$creaturename$a.jpeg /home/solxius/Desktop/Sisop/Modul1/$direcname/$lastname_$zerotwodee.jpeg
+	else
+		rm /home/solxius/Desktop/Sisop/Modul1/$direcname/$creaturename$a.jpeg
+	fi
+done
+
+mv /home/solxius/Desktop/Sisop/Modul1/Foto.log /home/solxius/Desktop/Sisop/Modul1/$direcname/Foto.log
+
+rm check.log
+```
+
+Kerangka dari 3c mirip dengan 3a, dengan beberapa perbedaan. Pertama, terdapat variable direcname, creaturename, dan lastname. direcname untuk mengetahui nama folder yang akan dibuat, creaturename untuk mengetahui format nama gambar, dan lastname untuk mengetahui format nama akhir. Karena disuruh bergantian, kita menggunakan if. Jika tanggal sekarang genap, akan mendownload kucing, jika ganjil, akan mendownload kelinci.
+```bash
+if [ $(($(date '+%d')%2)) -eq 0  ]
+```
+
+Akhirnya, dengan variabel baru sebelumnya, tinggal memindahkan gambar yang tidak duplikat sesuai direcname, creaturename, dan lastname.
+
+**(d)** 
+```bash
+#!/bin/bash
+
+cd /home/solxius/Desktop/Sisop/Modul1/
+zip --password "$(date '+%m%d%Y')" -rm Koleksi.zip */
+```
+
+Pertama, kita pindah ke folder yang mengandung folder-folder, supaya tidak dengan tidak sengaja men-zip file di home. 
+
+Selanjutnya, kita menzip dengan command zip. --password digunakan supaya kita men-zip dengan password, dan "$(date '+%m%d%Y')" setelahnya adalah passwordnya, dengan format mm-dd-yyyy tanggal sekarang. -r digunakan agar men-zip folder secara rekursif. -m digunakan supaya folder yang di-zip dihapuskan setelah di-zip. Koleksi.zip adalah nama zip yang ingin kita buat. */ adalah wildcard yang artinya adalah semua folder.
+
+**(e)** 
+```bash
+0 7 * * 1-5 bash /home/solxius/Desktop/Sisop/Modul1/soal3d.sh
+0 18 * * 1-5 cd /home/solxius/Desktop/Sisop/Modul1/ && unzip -P `date +\%m\%d\%Y` Koleksi.zip && rm Koleksi.zip
+```
+
+Artinya adalah saat jam 7.00 setiap hari senin-jumat, akan dijalankan soal3d.sh di direktori /home/solxius/Desktop/Sisop/Modul1/.
+
+Arti line ke-2 adalah, pada saat jam 18.00 setiap hari senin-jumat (sabtu dan minggu tidak diperlukan karena orang ini hanya men-zip saat dia kuliah), akan pindah ke folder yang mengandung folder gambar. Lalu, men-unzip Koleksi.zip dengan password `date +\%m\%d\%Y`, yaitu tanggal sekarang dengan format mm-dd-yyyy tanggal sekarang (password yang kita pakai pada nomor 3d. Terakhir, tinggal dihapus Koleksi.zip.
