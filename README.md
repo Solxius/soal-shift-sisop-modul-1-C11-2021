@@ -187,6 +187,7 @@ END{
 print "Transaksi terakhir dengan profit percentage terbesar yaitu %d dengan persentase %d%%\n" transaksi, max
 }' Laporan-TokoShisop.tsv >> hasil.txt 
 ```
+Pertama, kita mencari profit percentage yang dilambangkan dengan variabel a, dimana dihitung dengan membagi profit dengan hasil pengurangan sales dan profit lalu dikali 100. lalu kita membandingkan variabel a dengan variabel max untuk menyimpan nilai terbesar. Variabel transaksi digunakan untuk menyimpan hasil paling besar.
 **(b)**
 ```awk -F '\t''BEGIN{
 print"Daftar nama customer di Albuquerque pada tahun 2017 antara lain:\n"
@@ -201,6 +202,8 @@ for(i in nc) print i
 print("\n")
 }' Laporan-TokoShisop.tsv >> hasil.txt 
 ```
+Di nomor ini, kita mengecek apakah customer melakukan transaksi di Albuquerque pada tahun 2017.
+
 **(c)**
 ```awk -F '\t' 'BEGIN{t = 0}
 {
@@ -219,10 +222,13 @@ else if(z<x && z<y){
 sc = "Home Office"
 t = z
 }
+}
 END{
 print "Tipe segmen customer yang penjualannya paling sedikit adalah %s dengan %d transaksi.\n\n",sc,t
 }' Laporan-TokoShisop.tsv >> hasil.txt 
 ```
+Pertama, kita menghitung jumlah transaksi tiap kategori. Lalu kita membandingkan kategori-kategori tersebut hingga kita dapatkan segmen customer yang penjualannya paling sedikit.
+
 **(d)**
 ```awk -F '\t' 'BEGIN{hasil = 0}
 {
@@ -251,6 +257,7 @@ END
 {print "Wilayah bagian (region) yang memiliki total keuntungan (profit) yang paling sedikit adalah %s dengan total keuntungan %f\n", kawasan, hasil
 }' Laporan-TokoShiSop.tsv >> hasil.txt
 ```
+Pertama kita mengecek total keuntungan dari tiap-tiap wilayah. Lalu kita membandingkan wilayah-wilayah tersebut dan wilayah dengan keuntungan paling sedikit akan diprint.
 
 ## Soal Nomor 3
 Kuuhaku adalah orang yang sangat suka mengoleksi foto-foto digital, namun Kuuhaku juga merupakan seorang yang pemalas sehingga ia tidak ingin repot-repot mencari foto, selain itu ia juga seorang pemalu, sehingga ia tidak ingin ada orang yang melihat koleksinya tersebut, sayangnya ia memiliki teman bernama Steven yang memiliki rasa kepo yang luar biasa. Kuuhaku pun memiliki ide agar Steven tidak bisa melihat koleksinya, serta untuk mempermudah hidupnya, yaitu dengan meminta bantuan kalian. Idenya adalah :
