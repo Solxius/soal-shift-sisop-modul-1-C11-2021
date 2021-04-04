@@ -258,6 +258,8 @@ END
 }' Laporan-TokoShiSop.tsv >> hasil.txt
 ```
 Pertama kita mengecek total keuntungan dari tiap-tiap wilayah. Lalu kita membandingkan wilayah-wilayah tersebut dan wilayah dengan keuntungan paling sedikit akan diprint.
+
+Berikut adalah hasil dari kodingan diatas:
 ![Screenshot from 2021-04-04 17-05-09](https://user-images.githubusercontent.com/63457105/113505348-50394500-9568-11eb-9739-cda54d31aec1.png)
 
 
