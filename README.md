@@ -338,11 +338,15 @@ Lalu, kita looping, dan untuk setiap gambar, kita mengecek linknya dengan segala
 
 Jika flag-nya 0, jadi gambar tersebut tidak duplikat kepada gambar apapun di sebelumnya, jadi kita mengganti namanya dengan indeks yang benar. Variabel indexo untuk namanya, supaya kita mengetahui sementara gambar nomor berapa. Lalu, setelah semua selesai, tinggal menghapus check.log.
 
+%02d artinya supaya angka yang di bawah nomor 10 memiliki 2 angka, seperti di soal.
+
 ```bash
 indexo=$(($indexo + 1)) 
 zerotwodee=$(printf "Koleksi_%02d" "$indexo")
 mv /home/solxius/Desktop/Sisop/Modul1/kitten"$a".jpeg /home/solxius/Desktop/Sisop/Modul1/$zerotwodee.jpeg
 ```
+![image](https://user-images.githubusercontent.com/68369091/113510492-50940900-9585-11eb-84e7-8f49db370210.png)
+
 
 **(b)** 
 ```bash
@@ -401,6 +405,9 @@ Foto.log juga dipindah ke folder tersebut.
 ```
 
 Arti dari crontab di atas adalah bahwa pada setiap tanggal di atas (yaitu setiap 7 hari dari tanggal 1, dan setiap 4 hari dari tanggal 2), pada jam 20:00, akan dijalankan program soal3b.sh.
+
+![image](https://user-images.githubusercontent.com/68369091/113510515-77523f80-9585-11eb-8f3b-e33f5f61a7a4.png)
+
 
 **(c)** 
 
@@ -470,6 +477,10 @@ if [ $(($(date '+%d')%2)) -eq 0  ]
 
 Akhirnya, dengan variabel baru sebelumnya, tinggal memindahkan gambar yang tidak duplikat sesuai direcname, creaturename, dan lastname.
 
+![image](https://user-images.githubusercontent.com/68369091/113510558-b5e7fa00-9585-11eb-8685-44da2ede3f8b.png)
+![image](https://user-images.githubusercontent.com/68369091/113510581-c304e900-9585-11eb-83ee-dd1d53eb945c.png)
+
+
 **(d)** 
 ```bash
 #!/bin/bash
@@ -482,6 +493,9 @@ Pertama, kita pindah ke folder yang mengandung folder-folder, supaya tidak denga
 
 Selanjutnya, kita menzip dengan command zip. --password digunakan supaya kita men-zip dengan password, dan "$(date '+%m%d%Y')" setelahnya adalah passwordnya, dengan format mm-dd-yyyy tanggal sekarang. -r digunakan agar men-zip folder secara rekursif. -m digunakan supaya folder yang di-zip dihapuskan setelah di-zip. Koleksi.zip adalah nama zip yang ingin kita buat. */ adalah wildcard yang artinya adalah semua folder.
 
+![image](https://user-images.githubusercontent.com/68369091/113510607-d6b04f80-9585-11eb-87cc-6782e6f25858.png)
+
+
 **(e)** 
 ```bash
 0 7 * * 1-5 bash /home/solxius/Desktop/Sisop/Modul1/soal3d.sh
@@ -491,3 +505,11 @@ Selanjutnya, kita menzip dengan command zip. --password digunakan supaya kita me
 Artinya adalah saat jam 7.00 setiap hari senin-jumat, akan dijalankan soal3d.sh di direktori /home/solxius/Desktop/Sisop/Modul1/.
 
 Arti line ke-2 adalah, pada saat jam 18.00 setiap hari senin-jumat (sabtu dan minggu tidak diperlukan karena orang ini hanya men-zip saat dia kuliah), akan pindah ke folder yang mengandung folder gambar. Lalu, men-unzip Koleksi.zip dengan password `date +\%m\%d\%Y`, yaitu tanggal sekarang dengan format mm-dd-yyyy tanggal sekarang (password yang kita pakai pada nomor 3d. Terakhir, tinggal dihapus Koleksi.zip.
+
+Kendala :
+
+Saat nomor 1, terjadi beberapa error di user_statistic.csv, sehingga harus diinisialisasi dulu sebelum dimasukkan data.
+
+Saat nomor 3a, terjadi kendala di mana program tidak mengecek antar-foto, namun itu karena menaruh <, bukan > di dalam algoritmanya.
+
+Saat nomor 3, crontab 3e dengan tidak sengaja men-zip home folder, karena kurang menspesifikasi path.
