@@ -506,7 +506,7 @@ Artinya adalah saat jam 7.00 setiap hari senin-jumat, akan dijalankan soal3d.sh 
 
 Arti line ke-2 adalah, pada saat jam 18.00 setiap hari senin-jumat (sabtu dan minggu tidak diperlukan karena orang ini hanya men-zip saat dia kuliah), akan pindah ke folder yang mengandung folder gambar. Lalu, men-unzip Koleksi.zip dengan password `date +\%m\%d\%Y`, yaitu tanggal sekarang dengan format mm-dd-yyyy tanggal sekarang (password yang kita pakai pada nomor 3d. Terakhir, tinggal dihapus Koleksi.zip.
 
-#Kendala
+# Kendala
 
 Saat nomor 1, terjadi beberapa error di user_statistic.csv, sehingga harus diinisialisasi dulu sebelum dimasukkan data.
 
